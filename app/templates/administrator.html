@@ -1,0 +1,219 @@
+<html lang="en"><head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Focus Admin: Table</title>
+
+        <!-- ================= Favicon ================== -->
+        <!-- Standard -->
+        <link href="http://placehold.it/64.png/000/fff" rel="shortcut icon">
+        <!-- Retina iPad Touch Icon-->
+        <link href="http://placehold.it/144.png/000/fff" rel="apple-touch-icon"
+            sizes="144x144">
+        <!-- Retina iPhone Touch Icon-->
+        <link href="http://placehold.it/114.png/000/fff" rel="apple-touch-icon"
+            sizes="114x114">
+        <!-- Standard iPad Touch Icon-->
+        <link href="http://placehold.it/72.png/000/fff" rel="apple-touch-icon"
+            sizes="72x72">
+        <!-- Standard iPhone Touch Icon-->
+        <link href="http://placehold.it/57.png/000/fff" rel="apple-touch-icon"
+            sizes="57x57">
+
+        <!-- Styles -->
+        <link href="/static/assets_web/css/lib/font-awesome.min.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/data-table/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/themify-icons.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/menubar/sidebar.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/helper.css" rel="stylesheet">
+        <link href="/static/assets_web/css/style.css" rel="stylesheet">
+
+        <link href="/static/assets/css/lib/themify-icons.css" rel="stylesheet">
+        <link href="/static/assets/css/lib/data-table/dataTables.bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets/css/lib/data-table/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+        <link href="/static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets/css/lib/helper.css" rel="stylesheet">
+        <link href="/static/assets/css/style.css" rel="stylesheet">
+    </head>
+
+    <body class="pace-done sidebar-hide"><div class="pace pace-inactive"><div
+                class="pace-progress" style="transform: translate3d(100%, 0px,
+                0px);" data-progress-text="100%" data-progress="99">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div></div>
+
+        <div class="sidebar sidebar-hide-to-small sidebar-shrink
+            sidebar-gestures">
+            <div class="nano">
+                <div class="nano-content">
+                    <div class="logo"><a href="/administrator/"><!-- <img src="assets/images/logo.png" alt="" /> --><span>{{ user_name }}</span></a></div>
+                    <ul>
+                        <li><a class="sidebar-sub-toggle"><i class="ti-home"></i>
+                                管理界面 <span class="badge
+                                    badge-primary">2</span>
+                                <span class="sidebar-collapse-icon
+                                    ti-angle-down"></span></a>
+                            <ul>
+                                <li><a href="/admin_user/">用户管理</a></li>
+                                <li><a href="/admin_group/">分组管理</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /# sidebar -->
+
+        <div class="header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-left">
+                            <div class="hamburger sidebar-toggle">
+                                <span class="line"></span>
+                                <span class="line"></span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <ul>
+                                <li>
+                                    <a href="/logout/">
+                                        <i class="ti-power-off"></i>
+                                        <span>退出登陆</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /# header -->
+
+        <div class="content-wrap">
+            <div class="main">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 p-r-0 title-margin-right">
+                            <div class="page-header">
+                                <div class="page-title">
+                                    <h1>您好, <span>欢迎进入管理员页面！</span></h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i></div>
+                                        <div class="stat-content dib">
+                                            <div class="stat-text">已提取文件</div>
+                                            <div class="stat-digit">{{ entracted_file_len }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-icon dib"><i class="ti-link color-danger border-danger"></i></div>
+                                        <div class="stat-content dib">
+                                            <div class="stat-text">未提取文件</div>
+                                            <div class="stat-digit">{{ unextracted_file_len }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- /# row -->
+
+                    <section id="main-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="bootstrap-data-table-panel">
+                                            <div class="table-responsive">
+                                                <div class="dataTables_wrapper form-inline dt-bootstrap" id="row-select_wrapper">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table class="display table table-borderd table-hover dataTable" id="row-select" role="grid" aria-describedby="row-select_info">
+                                                                <thead>
+                                                                    <tr role="row">
+                                                                        <th tabindex="0" class="sorting_asc" aria-controls="row-select" style="width: 120px;" aria-label="#: activate to sort column descending" aria-sort="ascending" rowspan="1" colspan="1">#</th>
+                                                                        <th tabindex="0" class="sorting_asc" aria-controls="row-select" style="width: 120px;" aria-label="用户序号: activate to sort column descending" aria-sort="ascending" rowspan="1" colspan="1">用户ID</th>
+                                                                        <th tabindex="0" class="sorting" aria-controls="row-select" style="width: 120px;" aria-label="任务序号: activate to sort column ascending" rowspan="1" colspan="1">任务ID</th>
+                                                                        <th tabindex="0" class="sorting" aria-controls="row-select" style="width: 120px;" aria-label="媒体类型: activate to sort column ascending" rowspan="1" colspan="1">媒体类型</th>
+                                                                        <th tabindex="0" class="sorting" aria-controls="row-select" style="width: 190px;" aria-label="提取日期: activate to sort column ascending" rowspan="1" colspan="1">提取日期</th>
+                                                                        <th tabindex="0" class="sorting" aria-controls="row-select" style="width: 320px;" aria-label="操作: activate to sort column ascending" rowspan="1" colspan="1">操作</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {% for k,v in list %}
+                                                                        <tr>
+                                                                            {% for i in v %}
+                                                                            <td>{{ i }}</td>
+                                                                            {% endfor %}
+                                                                            <td>
+                                                                                {% if k in is_click %}
+                                                                                <a href="/extract_file.html?nid={{k}}" style="pointer-events: none">
+                                                                                    <button class="btn btn-default" type="button" name='extract'>已提取</button>
+                                                                                </a>
+                                                                                {% else %}
+                                                                                <a href="/extract_file.html?nid={{k}}">
+                                                                                    <button class="btn btn-primary" type="button" name='extract'>提取</button>
+                                                                                </a>
+                                                                                {% endif %}
+                                                                                <a href="/check_file.html?wid={{k}}">
+                                                                                    <button class="btn btn-primary" type="submit" name='check'>查看</button>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- /# wrapper -->
+
+        <!-- jquery vendor -->
+        <script src="/static/assets_web/js/lib/jquery.min.js"></script>
+        <script src="/static/assets_web/js/lib/jquery.nanoscroller.min.js"></script>
+        <!-- nano scroller -->
+        <script src="/static/assets_web/js/lib/menubar/sidebar.js"></script>
+        <script src="/static/assets_web/js/lib/preloader/pace.min.js"></script>
+        <!-- sidebar -->
+
+        <!-- bootstrap -->
+        <script src="/static/assets_web/js/lib/bootstrap.min.js"></script>
+        <script src="/static/assets_web/js/scripts.js"></script>
+        <!-- scripit init-->
+        <script src="/static/assets/js/lib/data-table/datatables.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/dataTables.buttons.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/jszip.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/pdfmake.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/vfs_fonts.js"></script>
+        <script src="/static/assets/js/lib/data-table/buttons.html5.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/buttons.print.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/buttons.colVis.min.js"></script>
+        <script src="/static/assets/js/lib/data-table/datatables-init.js"></script>
+    </body></html>

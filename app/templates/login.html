@@ -1,0 +1,92 @@
+<html lang="en"><head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Focus Admin: Widget</title>
+
+        <!-- ================= Favicon ================== -->
+        <!-- Standard -->
+        <link href="http://placehold.it/64.png/000/fff" rel="shortcut icon">
+        <!-- Retina iPad Touch Icon-->
+        <link href="http://placehold.it/144.png/000/fff" rel="apple-touch-icon"
+            sizes="144x144">
+        <!-- Retina iPhone Touch Icon-->
+        <link href="http://placehold.it/114.png/000/fff" rel="apple-touch-icon"
+            sizes="114x114">
+        <!-- Standard iPad Touch Icon-->
+        <link href="http://placehold.it/72.png/000/fff" rel="apple-touch-icon"
+            sizes="72x72">
+        <!-- Standard iPhone Touch Icon-->
+        <link href="http://placehold.it/57.png/000/fff" rel="apple-touch-icon"
+            sizes="57x57">
+
+        <!-- Styles -->
+        <link href="/static/assets_web/css/lib/font-awesome.min.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/themify-icons.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/helper.css" rel="stylesheet">
+        <link href="/static/assets_web/css/style.css" rel="stylesheet">
+    </head>
+
+    <body class="bg-primary">
+
+        <div class="unix-login">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="login-content">
+                            <div class="login-form">
+                                <h4>管理员登陆</h4>
+                                <form class="form-horizontal" action="/login/"
+                                    method="post">
+                                    <div class="form-group">
+                                        <label>用户名</label>
+                                        <input class="form-control" type="name"
+                                            placeholder="用户名" name="name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>密码</label>
+                                        <input name="pwd" class="form-control"
+                                            type="password" placeholder="密码">
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value='1' name='checkbox'>记住我
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary btn-flat
+                                            m-b-30 m-t-30" type="submit">登陆</button>
+                                    </div>
+                                    <p class='text-danger text-center'>{{ error_msg }}</p>
+                                    {% csrf_token %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- jquery vendor -->
+        <script src="/static/assets_web/js/lib/jquery.min.js"></script>
+        <script src="/static/assets_web/js/lib/jquery.nanoscroller.min.js"></script>
+        <!-- nano scroller -->
+        <script src="/static/assets_web/js/lib/menubar/sidebar.js"></script>
+        <script src="/static/assets_web/js/lib/preloader/pace.min.js"></script>
+        <!-- sidebar -->
+
+        <!-- bootstrap -->
+        <!-- Select2 -->
+        <script src="/static/assets_web/js/lib/select2/select2.full.min.js"></script>
+        <script
+            src="/static/assets_web/js/lib/form-validation/jquery.validate.min.js"></script>
+        <script
+            src="/static/assets_web/js/lib/form-validation/jquery.validate-init.js"></script>
+        <script src="/static/assets_web/js/lib/bootstrap.min.js"></script><script
+            src="/static/assets_web/js/scripts.js"></script>
+
+
+
+    </body></html>

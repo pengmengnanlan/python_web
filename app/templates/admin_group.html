@@ -1,0 +1,171 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Focus Admin: Form Validation</title>
+        <!-- ================= Favicon ================== -->
+        <!-- Standard -->
+        <link href="http://placehold.it/64.png/000/fff" rel="shortcut icon">
+        <!-- Retina iPad Touch Icon-->
+        <link href="http://placehold.it/144.png/000/fff" rel="apple-touch-icon"
+            sizes="144x144">
+        <!-- Retina iPhone Touch Icon-->
+        <link href="http://placehold.it/114.png/000/fff" rel="apple-touch-icon"
+            sizes="114x114">
+        <!-- Standard iPad Touch Icon-->
+        <link href="http://placehold.it/72.png/000/fff" rel="apple-touch-icon"
+            sizes="72x72">
+        <!-- Standard iPhone Touch Icon-->
+        <link href="http://placehold.it/57.png/000/fff" rel="apple-touch-icon"
+            sizes="57x57">
+        <!-- Styles -->
+        <link href="/static/assets_web/css/lib/select2/select2.min.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/font-awesome.min.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/themify-icons.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/menubar/sidebar.css"
+            rel="stylesheet">
+        <link href="/static/assets_web/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/assets_web/css/lib/helper.css" rel="stylesheet">
+        <link href="/static/assets_web/css/style.css" rel="stylesheet">
+    </head>
+
+    <body class="pace-done sidebar-hide"><div class="pace pace-inactive"><div>
+                class="pace-progress" style="transform: translate3d(100%, 0px,
+                0px);" data-progress-text="100%" data-progress="99">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div></div>
+
+        <div class="sidebar sidebar-hide-to-small sidebar-shrink
+            sidebar-gestures">
+            <div class="nano">
+                <div class="nano-content">
+                    <div class="logo"><a href="/administrator/"><!-- <img src="assets/images/logo.png" alt="" /> --><span>{{ user_name }}</span></a></div>
+                    <ul>
+                        <li><a class="sidebar-sub-toggle"><i class="ti-home"></i>
+                                管理界面 <span class="badge
+                                    badge-primary">2</span>
+                                <span class="sidebar-collapse-icon
+                                    ti-angle-down"></span></a>
+                            <ul>
+                                <li><a href="/admin_user/">用户管理</a></li>
+                                <li><a href="/admin_group/">分组管理</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /# sidebar -->
+
+        <div class="header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-left">
+                            <div class="hamburger sidebar-toggle">
+                                <span class="line"></span>
+                                <span class="line"></span>
+                                <span class="line"></span>
+                            </div>
+                        </div>
+                        <div class="float-right">
+                            <ul>
+                                <li>
+                                    <a href="/logout/">
+                                        <i class="ti-power-off"></i>
+                                        <span>退出登陆</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /# header -->
+
+        <div class="content-wrap">
+            <div class="main">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 p-r-0 title-margin-right">
+                            <div class="page-header">
+                                <div class="page-title">
+                                    <h1>创建新分组！</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# column -->
+                    </div>
+                    <!-- /# row -->
+                    <section id="main-content">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="form-validation">
+                                            <form class="form-valide" action="/admin_group/"
+                                                method="post"
+                                                novalidate="novalidate">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4
+                                                        col-form-label"
+                                                        for="val-group">分组名称
+                                                        <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="col-lg-8">
+                                                        <input
+                                                            name="val-group"
+                                                            class="form-control"
+                                                            id="val-group"
+                                                            type="text"
+                                                            placeholder="Unknown Group..">
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-8
+                                                            ml-auto">
+                                                            <button class="btn
+                                                                btn-primary"
+                                                                type="submit">提交</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p class='text-danger text-center'>{{ warning }}</p>
+                                                {% csrf_token %}
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- /# wrapper -->
+
+        <!-- jquery vendor -->
+        <script src="/static/assets_web/js/lib/jquery.min.js"></script>
+        <script src="/static/assets_web/js/lib/jquery.nanoscroller.min.js"></script>
+        <!-- nano scroller -->
+        <script src="/static/assets_web/js/lib/menubar/sidebar.js"></script>
+        <script src="/static/assets_web/js/lib/preloader/pace.min.js"></script>
+        <!-- sidebar -->
+
+        <!-- bootstrap -->
+        <!-- Select2 -->
+        <script src="/static/assets_web/js/lib/select2/select2.full.min.js"></script>
+        <script
+            src="/static/assets_web/js/lib/form-validation/jquery.validate.min.js"></script>
+        <script
+            src="/static/assets_web/js/lib/form-validation/jquery.validate-init.js"></script>
+        <script src="/static/assets_web/js/lib/bootstrap.min.js"></script><script
+            src="/static/assets_web/js/scripts.js"></script>
+        <!-- scripit init-->
+
+
+    </body></html>
