@@ -166,14 +166,17 @@
                                                                                 <a href="/extract_file.html?nid={{k}}" style="pointer-events: none">
                                                                                     <button class="btn btn-default" type="button" name='extract'>已提取</button>
                                                                                 </a>
+                                                                                <a href="/check_file.html?wid={{k}}">
+                                                                                    <button class="btn btn-primary" type="button" name='check'>查看</button>
+                                                                                </a>
                                                                                 {% else %}
                                                                                 <a href="/extract_file.html?nid={{k}}">
                                                                                     <button class="btn btn-primary" type="button" name='extract'>提取</button>
                                                                                 </a>
-                                                                                {% endif %}
                                                                                 <a href="/check_file.html?wid={{k}}">
-                                                                                    <button class="btn btn-primary" type="submit" name='check'>查看</button>
+                                                                                    <button class="btn btn-default" type="button" name='check'>查看</button>
                                                                                 </a>
+                                                                                {% endif %}
                                                                             </td>
                                                                         </tr>
                                                                     {% endfor %}
