@@ -28,7 +28,7 @@ from django.contrib import admin
 from . import view, Api
 
 db = pymysql.connect(host='localhost', user='root',
-                     password='1234567', db='download_info', charset='utf8')
+                     password='123456', db='download_info', charset='utf8')
 
 urlpatterns = [re_path(r'^$', view.login, name='index'),
                re_path(r'^login/$', view.login, name='login'),
@@ -36,7 +36,6 @@ urlpatterns = [re_path(r'^$', view.login, name='index'),
                re_path(r'^admin_user/$', view.admin_user, {'page':'admin_user.html'}, name='admin_user'),
                re_path(r'^admin_group/$', view.admin_group, {'page':'admin_group.html'}, name='admin_group'),
                re_path(r'^administrator/$', view.administrator, {'page':'administrator.html'}, name='administrator'),
-               re_path(r'^test/$', view.test, name='test'),
                re_path(r'^extract_file.html/$', view.extract_file,name='extract_file'),
                re_path(r'^check_file.html/$', view.check_file,name='check_file'),]
                
