@@ -1,5 +1,9 @@
 import pymysql
 import json
+import time
+import re
+import os
+import ctypes
 from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -9,16 +13,17 @@ from ctypes import *
 
 # 连接数据库
 db = pymysql.connect(host='localhost', user='root',
-                     password='1234567', db='north', charset='utf8')
+                     password='123456', db='north', charset='utf8')
 cursor = db.cursor()
 
 # html数值参数
 context = {}
 # 数据库表单映射
 terminal_type_dir = {'pc': 1, 'mobile': 2}
-media_type_dir = {'photo': 1, 'originalV': 2, 'youtubeV': 3, 'audio': 4}
+media_type_dir = {'photo': 1, 'video': 2, 'audio': 3}
 algorithm_dir = {'a1': 1, 'a2': 2, 'a3': 3, 'a4': 4}
 permission_dir = {'yes': 1, 'no': 0}
+media_type_display_dir = {1:'图片', 2:'视频', 3:'音频'}
 
 # 登陆
 def login(request):
@@ -97,6 +102,7 @@ def logout(request):
 # 管理终端及用户
 def admin_user(request, page):
     context['warning'] = ''
+    context['error'] = ''
 
     # 获取所有组信息
     group_dir = {}
@@ -202,10 +208,13 @@ def administrator(request, page):
     for d in data:
         file_dir = {}
         file_dir['index'] = count
-        file_dir['user_id'] = d[1]
+        file_dir['user_id'] = d[2]
         file_dir['task_id'] = d[0]
-        file_dir['media_type'] = d[2]
-        file_dir['date'] = d[9].strftime("%Y-%m-%d %H:%M:%S")
+        file_dir['media_type'] = media_type_display_dir[d[1]]
+        try:
+            file_dir['date'] = d[10].strftime("%Y-%m-%d %H:%M:%S")
+        except AttributeError:
+            file_dir['date'] = ''
         file_list.append(file_dir)
         count += 1
 
@@ -217,32 +226,69 @@ def administrator(request, page):
 
 # 提取文件
 def extract_file(request):
+    extract_time = time.strftime("%Y-%m-%d %H:%M:%S")
     extract_id = request.GET.get('nid')
     
     # 提取参数
     if extract_id is not None:
-        media_store_path = []
-        private_info = []
+        media_store_path = ''
+        private_info = ''
 
         sql_extract_info = "select media_store_path, private_info from extract_info where task_id = %s order by seq_id"
         cursor.execute(sql_extract_info, extract_id)
         data = cursor.fetchall()
         for d in data:
-            media_store_path.append(d[0])
-            private_info.append(d[1])
-        
-        sql_task_info = "select file_len, key1, key2, key3 from task_info where task_id = %s"
+            media_store_path += d[0]+';'
+            private_info += d[1]+';'
+        media_length = len(data)
+        print(media_store_path)
+        print(private_info)
+        print(media_length)
+        # stegoPathLen = len(media_store_path)
+        # privProtoLen = len(private_info)
+
+        sql_msg_file_path = "select media_name, media_store_path from extract_info where task_id = %s limit 1"
+        cursor.execute(sql_msg_file_path, extract_id)
+        data = cursor.fetchone()
+        msg_file_path = re.sub(data[0],'',data[1])
+
+        sql_task_info = "select media_type, file_len, key1, key2, key3 from task_info where task_id = %s"
         cursor.execute(sql_task_info, extract_id)
         data = cursor.fetchone()
-        file_len = data[0]
-        key1 = data[1]
-        key2 = data[2]
-        key3 = data[3]
+        media_type = data[0]
+        file_len = data[1]
+        key1 = data[2]
+        key2 = data[3]
+        key3 = data[4]
+
+        # 提取音频
+        if media_type == 3:
+            audio_status_code = extract_audio(c_char_p(media_store_path.encode('utf-8')), c_int(media_length), c_char_p(key1.encode('utf-8')), 
+                                              c_char_p(key2.encode('utf-8')), c_char_p(key3.encode('utf-8')), c_char_p(private_info.encode('utf-8')), 
+                                              c_char_p(msg_file_path.encode('utf-8')), c_int(file_len))
+            print(audio_status_code)
+
+        # 提取视频
+        if media_type == 2:
+            video_status_code = extract_video(c_char_p(media_store_path.encode('utf-8')), c_int(media_length), c_char_p(key3.encode('utf-8')),
+                                              c_char_p(private_info.encode('utf-8')), c_char_p(msg_file_path.encode('utf-8')), c_long(file_len))
+            print(video_status_code)
+
 
         # 更新状态
         sql_update_state = "update task_info set extract_state = 1 where task_id = %s"
         cursor.execute("set SQL_SAFE_UPDATES = 0")
         cursor.execute(sql_update_state, extract_id)
+        db.commit()
+        # 更新时间
+        sql_update_time = "update task_info set extract_date = %s where task_id = %s"
+        cursor.execute("set SQL_SAFE_UPDATES = 0")
+        cursor.execute(sql_update_time, [extract_time, extract_id])
+        db.commit()
+        # 更新文件路径
+        sql_update_path = "update task_info set message_store_path = %s where task_id = %s"
+        cursor.execute("set SQL_SAFE_UPDATES = 0")
+        cursor.execute(sql_update_path, [msg_file_path, extract_id])
         db.commit()
 
     return HttpResponseRedirect('/administrator/')
@@ -251,13 +297,30 @@ def extract_file(request):
 def check_file(request):
     check_id = request.GET.get('wid')
     if check_id is not None:
-        print(check_id)
+        sql_check_files = "select message_store_path from task_info where task_id = %s"
+        cursor.execute(sql_check_files, check_id)
+        message_store_path = cursor.fetchone()
+        os.startfile(message_store_path[0])
+
     return HttpResponseRedirect('/administrator/')
 
-# 调用.dll接口文件
-def test(request):
-    dirs = {'1':'a','2':'b'}
-    context['dirs'] = dirs.items()
-    return render(request,'test.html')
+# 调用音频接口文件
+def extract_audio(media_store_path, media_length, key1, key2, key3, private_info, msg_file_path, file_len):
+    CUR_PATH = 'C:/Users/alina/Desktop/python_web/app/'
+    audio_dllPath=os.path.join(CUR_PATH, 'AudioEmbed.dll')
+    audio_dll = ctypes.WinDLL(audio_dllPath)
+    audio_status_code = ctypes.c_int
+    audio_status_code = audio_dll.extractAudio(media_store_path, media_length, key1, key2, 
+                                               key3, private_info, msg_file_path, file_len)
+    return audio_status_code
+
+# 调用视频接口文件
+def extract_video(media_store_path, media_length, key3, private_info, msg_file_path, file_len):
+    CUR_PATH = 'C:/Users/alina/Desktop/python_web/app/'
+    videp_dllPath=os.path.join(CUR_PATH, 'videoEmbed.dll')
+    video_dll = ctypes.WinDLL(videp_dllPath)
+    video_status_code = ctypes.c_int
+    video_status_code = video_dll.extractSequence(media_store_path, media_length, key3, private_info, msg_file_path, file_len)
+    return video_status_code
 
 # db.close()
