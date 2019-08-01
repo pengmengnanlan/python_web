@@ -241,11 +241,9 @@ def extract_file(request):
             media_store_path += d[0]+';'
             private_info += d[1]+';'
         media_length = len(data)
-        print(media_store_path)
-        print(private_info)
-        print(media_length)
-        # stegoPathLen = len(media_store_path)
-        # privProtoLen = len(private_info)
+        # print(media_store_path)
+        # print(private_info)
+        # print(media_length)
 
         sql_msg_file_path = "select media_name, media_store_path from extract_info where task_id = %s limit 1"
         cursor.execute(sql_msg_file_path, extract_id)
@@ -267,31 +265,37 @@ def extract_file(request):
                                               c_char_p(key2.encode('utf-8')), c_char_p(key3.encode('utf-8')), c_char_p(private_info.encode('utf-8')), 
                                               c_char_p(msg_file_path.encode('utf-8')), c_int(file_len))
             print(audio_status_code)
+            if audio_status_code == 100:
+                update(extract_id, extract_time, msg_file_path)
 
         # 提取视频
         if media_type == 2:
             video_status_code = extract_video(c_char_p(media_store_path.encode('utf-8')), c_int(media_length), c_char_p(key3.encode('utf-8')),
                                               c_char_p(private_info.encode('utf-8')), c_char_p(msg_file_path.encode('utf-8')), c_long(file_len))
             print(video_status_code)
+            if video_status_code == 0:
+                update(extract_id, extract_time, msg_file_path)
 
+        
+        return HttpResponseRedirect('/administrator/')
 
-        # 更新状态
-        sql_update_state = "update task_info set extract_state = 1 where task_id = %s"
-        cursor.execute("set SQL_SAFE_UPDATES = 0")
-        cursor.execute(sql_update_state, extract_id)
-        db.commit()
-        # 更新时间
-        sql_update_time = "update task_info set extract_date = %s where task_id = %s"
-        cursor.execute("set SQL_SAFE_UPDATES = 0")
-        cursor.execute(sql_update_time, [extract_time, extract_id])
-        db.commit()
-        # 更新文件路径
-        sql_update_path = "update task_info set message_store_path = %s where task_id = %s"
-        cursor.execute("set SQL_SAFE_UPDATES = 0")
-        cursor.execute(sql_update_path, [msg_file_path, extract_id])
-        db.commit()
-
-    return HttpResponseRedirect('/administrator/')
+# 更新task_info表
+def update(extract_id, extract_time, msg_file_path):
+    # 更新状态
+    sql_update_state = "update task_info set extract_state = 1 where task_id = %s"
+    cursor.execute("set SQL_SAFE_UPDATES = 0")
+    cursor.execute(sql_update_state, extract_id)
+    db.commit()
+    # 更新时间
+    sql_update_time = "update task_info set extract_date = %s where task_id = %s"
+    cursor.execute("set SQL_SAFE_UPDATES = 0")
+    cursor.execute(sql_update_time, [extract_time, extract_id])
+    db.commit()
+    # 更新文件路径
+    sql_update_path = "update task_info set message_store_path = %s where task_id = %s"
+    cursor.execute("set SQL_SAFE_UPDATES = 0")
+    cursor.execute(sql_update_path, [msg_file_path, extract_id])
+    db.commit()
 
 # 查看文件
 def check_file(request):
@@ -300,6 +304,13 @@ def check_file(request):
         sql_check_files = "select message_store_path from task_info where task_id = %s"
         cursor.execute(sql_check_files, check_id)
         message_store_path = cursor.fetchone()
+        all_files = os.listdir(message_store_path[0])
+
+        # 删除.wav文件
+        for f in all_files:
+            if f.endswith('.wav'):
+                os.chdir(message_store_path[0])
+                os.remove(f)
         os.startfile(message_store_path[0])
 
     return HttpResponseRedirect('/administrator/')
