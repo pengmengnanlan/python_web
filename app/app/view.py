@@ -259,6 +259,14 @@ def extract_file(request):
         key2 = data[3]
         key3 = data[4]
 
+        # 提取图片
+        if media_type == 1:
+            photo_status_code = extract_photo(c_char_p(media_store_path.encode('utf-8')), c_int(media_length), c_char_p(key1.encode('utf-8')), 
+                                              c_char_p(key2.encode('utf-8')), c_char_p(key3.encode('utf-8')), c_char_p(msg_file_path.encode('utf-8')))
+            print(photo_status_code)
+            if photo_status_code == 0:
+                update(extract_id, extract_time, msg_file_path)
+
         # 提取音频
         if media_type == 3:
             audio_status_code = extract_audio(c_char_p(media_store_path.encode('utf-8')), c_int(media_length), c_char_p(key1.encode('utf-8')), 
@@ -314,6 +322,15 @@ def check_file(request):
         os.startfile(message_store_path[0])
 
     return HttpResponseRedirect('/administrator/')
+
+# 调用图片接口文件
+def extract_photo(media_store_path, media_length, key1, key2, key3, msg_file_path):
+    CUR_PATH = 'C:/Users/alina/Desktop/python_web/app/'
+    photo_dllPath=os.path.join(CUR_PATH, 'north_img_demo.dll')
+    photo_dll = ctypes.WinDLL(photo_dllPath)
+    photo_status_code = ctypes.c_int
+    photo_status_code = photo_dll.img_batch_extract(media_store_path, media_length, key1, key2, key3, msg_file_path,c_int(0))
+    return photo_status_code
 
 # 调用音频接口文件
 def extract_audio(media_store_path, media_length, key1, key2, key3, private_info, msg_file_path, file_len):
