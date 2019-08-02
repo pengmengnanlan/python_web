@@ -25,7 +25,7 @@ from django.conf.urls import url
 from django.urls import path
 from django.urls import include, re_path
 from django.contrib import admin 
-from . import view, Api
+from . import view
 
 db = pymysql.connect(host='localhost', user='root',
                      password='123456', db='download_info', charset='utf8')
